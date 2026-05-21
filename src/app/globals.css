@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-background: #030305;
+  --color-foreground: #E8E6E3;
+  --font-sans: "SF Pro Display", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SFMono-Regular", "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --color-agni: #FF4D00;
+  --color-void: #030305;
+  --color-ash: #E8E6E3;
+}
+
+/* Dark mode (default) */
+:root,
+[data-theme="dark"] {
+  --font-devanagari: "Noto Sans Devanagari", "Kohinoor Devanagari", "Nirmala UI", sans-serif;
+  --bg: #030305;
+  --surface: #0a0a0f;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #E8E6E3;
+  --text-muted: #6B6B7B;
+  --accent: #FF4D00;
+  --accent-dim: #C7511F;
+  --toggle-track: #0a0a0f;
+  --toggle-track-active: #E8E6E3;
+  --toggle-border: rgba(255, 77, 0, 0.3);
+  --toggle-border-active: rgba(199, 81, 31, 0.4);
+  --toggle-glow: #FF4D00;
+}
+
+/* Light mode */
+[data-theme="light"] {
+  --bg: #F5F0E8;
+  --surface: #FFFFFF;
+  --border: rgba(0, 0, 0, 0.14);
+  --text: #1a1a1a;
+  --text-muted: #6B6B7B;
+  --accent: #C7511F;
+  --accent-dim: #8F2D1F;
+  --toggle-track: #E8E6E3;
+  --toggle-track-active: #0a0a0f;
+  --toggle-border: rgba(199, 81, 31, 0.3);
+  --toggle-border-active: rgba(255, 77, 0, 0.4);
+  --toggle-glow: #C7511F;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--bg);
+    color: var(--text);
+    max-width: 100%;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    background: rgba(255, 77, 0, 0.3);
+    color: #E8E6E3;
+  }
+}
+
+/* Scroll-driven text skew */
+.skew-scroll {
+  transition: transform 0.1s ease-out;
+}
+
+/* Magnetic button pull */
+.magnetic {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Accordion animations */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* Infinite marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
