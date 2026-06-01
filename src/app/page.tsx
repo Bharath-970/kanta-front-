@@ -36,6 +36,7 @@ const TeamShowcase = dynamic(() => import("@/components/TeamShowcase"), { ssr: f
 const EnterGate = dynamic(() => import("@/components/EnterGate"), { ssr: false });
 const GLSLTerrain = dynamic(() => import("@/components/GLSLTerrain"), { ssr: false });
 const SweepText = dynamic(() => import("@/components/SweepText"), { ssr: false });
+import UseCasesScroller from "@/components/UseCasesScroller";
 
 function useBelowFold() {
   const ref = useRef<HTMLDivElement>(null);
@@ -324,6 +325,8 @@ export default function Home() {
                 <RulerCarousel items={HOMEPAGE_ACHIEVEMENTS} />
               </div>
             </section>
+
+            <UseCasesScroller />
 
             <section id="team" className="relative overflow-hidden border-t border-[var(--border)] px-6 py-24">
               <div className="mx-auto max-w-5xl">

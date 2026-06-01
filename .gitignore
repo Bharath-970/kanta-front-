@@ -43,3 +43,21 @@ next-env.d.ts
 *.py
 batzman.md
 .tmp_serve_*.py
+
+# Sub-app virtualenvs & deps (never commit)
+**/venv/
+**/node_modules/
+**/__pycache__/
+**/.pytest_cache/
+
+# Databases & ML model artifacts
+*.db
+*.pkl
+*.sqlite
+*.sqlite3
+backend/artifacts/
+
+# Temp / scratch
+medai_temp/
+**/*.duckdb
+**/Claims/

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/constants";
 import { getNavSectionId, shouldHandleNavInPage } from "@/lib/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useAuth } from "@/lib/auth";
 
 function LiveClock() {
   const [time, setTime] = useState("");
@@ -66,6 +67,7 @@ function Cursor({ position }: { position: { left: number; width: number; opacity
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
   const [position, setPosition] = useState({ left: 0, width: 0, opacity: 0 });
   const [visible, setVisible] = useState(true);
   const [activeHash, setActiveHash] = useState("");
@@ -79,7 +81,7 @@ export default function Navigation() {
       lastY.current = current;
 
       // Track active section
-      const ids = ["process", "stack", "wins", "team", "contact"];
+      const ids = ["process", "stack", "wins", "use-cases", "team", "contact"];
       for (const id of [...ids].reverse()) {
         const el = document.getElementById(id);
         if (el && el.getBoundingClientRect().top <= 120) {
@@ -115,6 +117,12 @@ export default function Navigation() {
     });
   };
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/" && activeHash === "";
+    if (href.startsWith("/#")) return activeHash === href;
+    return pathname === href;
+  };
+
   return (
     <nav className={`fixed top-4 left-1/2 z-[100] -translate-x-1/2 transition-all duration-300 ${visible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"}`}>
       <div className="flex items-center gap-4">
@@ -126,7 +134,7 @@ export default function Navigation() {
             <Tab
               key={link.href}
               href={link.href}
-              isActive={link.href === "/" ? activeHash === "" : activeHash === link.href}
+              isActive={isActive(link.href)}
               setPosition={setPosition}
               onClick={handleNavClick}
             >
@@ -143,12 +151,36 @@ export default function Navigation() {
         </div>
 
         <div className="flex items-center gap-1 rounded-full border border-black/[0.12] bg-[var(--surface)]/95 p-1 backdrop-blur-xl shadow-[0_2px_20px_rgba(0,0,0,0.18)]">
-          <Link href="/login" className="whitespace-nowrap px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--text)] rounded-full">
-            Login
-          </Link>
-          <Link href="/signup" className="whitespace-nowrap rounded-full bg-[var(--accent)] px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-white transition-opacity duration-200 hover:opacity-90">
-            Sign Up
-          </Link>
+          {user ? (
+            <>
+              <span className="whitespace-nowrap px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-[var(--accent)]">
+                {user.username}
+              </span>
+              {user.is_admin && (
+                <Link
+                  href="/admin"
+                  className="whitespace-nowrap rounded-full border border-[var(--accent)]/40 px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10"
+                >
+                  Admin
+                </Link>
+              )}
+              <button
+                onClick={() => logout()}
+                className="whitespace-nowrap rounded-full border border-[var(--border)] px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="whitespace-nowrap px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--text)] rounded-full">
+                Login
+              </Link>
+              <Link href="/signup" className="whitespace-nowrap rounded-full bg-[var(--accent)] px-3 py-1.5 text-[11px] font-mono uppercase tracking-[0.15em] text-white transition-opacity duration-200 hover:opacity-90">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

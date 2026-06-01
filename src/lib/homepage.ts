@@ -199,10 +199,22 @@ export const HOMEPAGE_CHAMBERS: Record<string, ChamberIntroData> = {
       { label: "Status", value: "Filed" },
     ],
   },
+  useCases: {
+    id: "use-cases",
+    index: "04",
+    eyebrow: "Chamber 04 // Classified Archive",
+    title: "Use Cases",
+    description: "Real-world deployments where fraud was identified, traced, and neutralized. Each dossier represents a live operation — from incident detection to governed resolution.",
+    railItems: [
+      { label: "Scope", value: "Multi-Sector" },
+      { label: "Status", value: "Active" },
+      { label: "Clearance", value: "Verified" },
+    ],
+  },
   team: {
     id: "team",
-    index: "04",
-    eyebrow: "Chamber 04 // Operating Unit",
+    index: "05",
+    eyebrow: "Chamber 05 // Operating Unit",
     title: "Our Team",
     description: "Same team element, stronger worldbuilding. Operators are framed as part of the system, not as a detached About page.",
     railItems: [
@@ -213,8 +225,8 @@ export const HOMEPAGE_CHAMBERS: Record<string, ChamberIntroData> = {
   },
   contact: {
     id: "contact",
-    index: "05",
-    eyebrow: "Chamber 05 // Secure Channel",
+    index: "06",
+    eyebrow: "Chamber 06 // Secure Channel",
     title: "Initiate Contact",
     description: "The form remains functional, but the chamber now behaves like a transmission point rather than the place where the narrative gives up and becomes ordinary UI.",
     railItems: [

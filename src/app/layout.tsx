@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
-import GrainOverlay from "@/components/GrainOverlay";
-import PageTransition from "@/components/PageTransition";
-import Preloader from "@/components/Preloader";
-import ClientCursor from "@/components/ClientCursor";
+import LayoutShell from "@/components/LayoutShell";
+import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: {
@@ -31,15 +26,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <ClientCursor />
-          <Preloader />
-          <ScrollProgress />
-          <GrainOverlay />
-          <Navigation />
-          <PageTransition>
-            <main className="flex-1">{children}</main>
-          </PageTransition>
-          <Footer />
+          <AuthProvider>
+            <LayoutShell>{children}</LayoutShell>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
