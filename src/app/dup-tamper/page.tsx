@@ -132,16 +132,27 @@ export default function DupTamperPage() {
           </p>
         </div>
 
-        {/* Sample banner */}
-        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start justify-between gap-4">
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
-            <p className="font-mono text-xs text-[var(--text-muted)]">No backend running? Load a pre-analysed tampering result to see what the detection output looks like.</p>
+        {/* Sample zone */}
+        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-amber-500/10">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400">📦 Sample Document</p>
+              <p className="font-mono text-[10px] text-[var(--text-muted)] mt-0.5">Click Load to auto-fill both image slots with the same sample doc and show a tampering demo</p>
+            </div>
+            <button onClick={() => {
+              setPrev1("/samples/claim-sample.jpg");
+              setPrev2("/samples/claim-sample.jpg");
+              setFile1(new File([], "sample_original.jpg"));
+              setFile2(new File([], "sample_compare.jpg"));
+              setResult(SAMPLE_RESULT);
+            }}
+              className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all">
+              Load Sample →
+            </button>
           </div>
-          <button onClick={() => setResult(SAMPLE_RESULT)}
-            className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all">
-            Load Sample →
-          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/samples/claim-sample.jpg" alt="Sample" className="w-full max-h-32 object-cover object-top opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">

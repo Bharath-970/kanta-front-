@@ -108,21 +108,40 @@ export default function DocForgeryPage() {
           ))}
         </div>
 
-        {/* Sample data banner */}
-        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
-          <div className="flex items-start justify-between gap-4">
+        {/* Sample data zone */}
+        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-amber-500/10">
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
-              <p className="font-mono text-xs text-[var(--text-muted)]">
-                No backend? Load a pre-analysed sample result to see what the detection output looks like.
-              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400">📦 Sample Document</p>
+              <p className="font-mono text-[10px] text-[var(--text-muted)] mt-0.5">Drag this sample or click Load to run a pre-analysed demo</p>
             </div>
             <button
-              onClick={() => setResult(SAMPLE_RESULT)}
+              onClick={() => {
+                setPreview("/samples/claim-sample.jpg");
+                setFile(new File([], "sample_pm_jay_claim.jpg"));
+                setResult(SAMPLE_RESULT);
+              }}
               className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all"
             >
               Load Sample →
             </button>
+          </div>
+          {/* Sample image preview */}
+          <div
+            draggable
+            onDragStart={(e) => {
+              // Allow dragging the sample into the upload zone
+              e.dataTransfer.setData("text/plain", "sample");
+            }}
+            className="cursor-grab active:cursor-grabbing"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/samples/claim-sample.jpg"
+              alt="Sample claim document"
+              className="w-full max-h-40 object-cover object-top opacity-80 hover:opacity-100 transition-opacity"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
           </div>
         </div>
 
