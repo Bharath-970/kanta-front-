@@ -183,6 +183,34 @@ export default function FamilyClusterPage() {
     });
   }, []);
 
+  const loadSample = useCallback(() => {
+    const families = ["FAM001","FAM002","FAM003","FAM004","FAM005","FAM006"];
+    const diagCodes = Object.keys(DIAGNOSIS_MAP);
+    const rows: Admission[] = [];
+    const base = new Date("2024-04-10");
+    families.forEach((fid, fi) => {
+      const members = fi < 2 ? 4 : 2;
+      Array.from({length: members}).forEach((_, mi) => {
+        const code = fi < 2
+          ? (mi < 2 ? "D007" : "D008")     // suspicious: heart attack + cardiac arrest
+          : diagCodes[(fi*3+mi) % diagCodes.length];
+        const adm = new Date(base.getTime() + fi*2*86400000 + mi*(fi<2?3600000:86400000));
+        const discharge = new Date(adm.getTime() + (6+mi)*3600000);
+        const info = DIAGNOSIS_MAP[code] ?? { name: "Unknown", category: "other", risk: "warning" as const };
+        rows.push({
+          Patient_ID: `PAT_${fid}_${mi+1}`, Family_ID: fid,
+          Diagnosis_Code: code, Admission_Time: adm.toISOString(), Discharge_Time: discharge.toISOString(),
+          admission: adm, discharge,
+          durationHours: (discharge.getTime()-adm.getTime())/3_600_000,
+          diagName: info.name, diagCategory: info.category, diagRisk: info.risk,
+        });
+      });
+    });
+    setFilename("sample_family_clusters.csv");
+    setRawRows(rows);
+    setResults(analyze(rows));
+  }, []);
+
   if (!results) {
     return (
       <div className="min-h-screen px-6 py-24">
@@ -190,6 +218,17 @@ export default function FamilyClusterPage() {
           <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--accent)]">KS-FC-001 — FRAUD DETECTION</p>
           <h1 className="mb-3 font-mono text-4xl font-bold text-[var(--text)]">Family Cluster Fraud</h1>
           <p className="mb-10 font-mono text-sm text-[var(--text-muted)]">Detect coordinated family admission fraud rings by analysing diagnosis patterns, timing clusters, and high-risk admission sequences.</p>
+          {/* Sample banner */}
+          <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
+              <p className="font-mono text-xs text-[var(--text-muted)]">No CSV? Load 6 synthetic families — 2 with suspicious coordinated high-risk claims, 4 legitimate.</p>
+            </div>
+            <button onClick={loadSample}
+              className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all">
+              Load Sample →
+            </button>
+          </div>
           <UploadZone onFile={handleFile} />
         </div>
       </div>

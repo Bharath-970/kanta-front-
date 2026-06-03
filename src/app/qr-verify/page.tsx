@@ -17,6 +17,29 @@ type Result = {
   all_matched: boolean;
 };
 
+const SAMPLE_RESULT: Result = {
+  verdict: "DISCREPANCIES_FOUND",
+  qr_url: "https://crsorgi.gov.in/web/index.php/auth/viewDeathCert?regnNo=CG-2024-0123456",
+  ocr_text: "DEATH CERTIFICATE\nName: Ramesh Kumar Singh\nDate of Death: 14/03/2024\nPlace: District Hospital Raipur\nCause: Cardiac Arrest",
+  portal_fields: [
+    { field: "Name", value: "Ramesh Kumar Singh" },
+    { field: "Date of Death", value: "14/03/2024" },
+    { field: "Registration No", value: "CG-2024-0123456" },
+    { field: "Place of Death", value: "City Hospital, Raipur" },
+    { field: "Cause of Death", value: "Cardiac Arrest" },
+  ],
+  cross_reference: [
+    { field: "Name", value: "Ramesh Kumar Singh", found_in_ocr: true, status: "matched" },
+    { field: "Date of Death", value: "14/03/2024", found_in_ocr: true, status: "matched" },
+    { field: "Registration No", value: "CG-2024-0123456", found_in_ocr: false, status: "not_matched" },
+    { field: "Place of Death", value: "City Hospital, Raipur", found_in_ocr: false, status: "not_matched" },
+    { field: "Cause of Death", value: "Cardiac Arrest", found_in_ocr: true, status: "matched" },
+  ],
+  match_count: 3,
+  total_fields: 5,
+  all_matched: false,
+};
+
 const VERDICT_META: Record<string, { label: string; color: string; bg: string }> = {
   VERIFIED:             { label: "Document Verified",       color: "text-emerald-400", bg: "border-emerald-500/30 bg-emerald-500/10" },
   DISCREPANCIES_FOUND:  { label: "Discrepancies Found",     color: "text-red-400",     bg: "border-red-500/30 bg-red-500/10" },
@@ -68,6 +91,18 @@ export default function QRVerifyPage() {
           <p className="mt-2 font-mono text-sm text-[var(--text-muted)]">
             Upload a death certificate. Decodes QR code → scrapes official portal → cross-references against OCR-extracted text to detect forgeries.
           </p>
+        </div>
+
+        {/* Sample banner */}
+        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start justify-between gap-4">
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
+            <p className="font-mono text-xs text-[var(--text-muted)]">No backend? Load a pre-verified sample certificate to see what the QR cross-reference output looks like.</p>
+          </div>
+          <button onClick={() => setResult(SAMPLE_RESULT)}
+            className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all">
+            Load Sample →
+          </button>
         </div>
 
         <div className="grid gap-8 md:grid-cols-[360px_1fr]">

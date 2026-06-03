@@ -6,6 +6,17 @@ import { Upload, FileImage, AlertTriangle, CheckCircle, X } from "lucide-react";
 
 const API = "";
 
+// ── Sample demo result (shown without backend) ─────────────
+const SAMPLE_RESULT: Result = {
+  filename: "sample_pm_jay_claim.jpg",
+  categories: ["C1", "C4"],
+  annotated_image: "",
+  details: {
+    C1: { label: "Copy-Paste", regions: 3 },
+    C4: { label: "Erasure", regions: 2 },
+  },
+};
+
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string; desc: string }> = {
   C1:  { label: "C1 — Copy-Paste",        color: "text-red-400",    bg: "border-red-500/30 bg-red-500/10",     desc: "Regions copied & pasted within the document" },
   C3:  { label: "C3 — Added Content",     color: "text-emerald-400",bg: "border-emerald-500/30 bg-emerald-500/10", desc: "Stamps, signatures, or text added post-creation" },
@@ -95,6 +106,24 @@ export default function DocForgeryPage() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* Sample data banner */}
+        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
+              <p className="font-mono text-xs text-[var(--text-muted)]">
+                No backend? Load a pre-analysed sample result to see what the detection output looks like.
+              </p>
+            </div>
+            <button
+              onClick={() => setResult(SAMPLE_RESULT)}
+              className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all"
+            >
+              Load Sample →
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">

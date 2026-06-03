@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, Play } from "lucide-react";
 import ScrollCard from "@/components/ScrollCard";
 import ChamberIntro from "@/components/ChamberIntro";
 import CountUp from "@/components/CountUp";
@@ -24,6 +24,7 @@ type CaseStudy = {
   impact: { label: string; value: string }[];
   tech: string[];
   link?: string;
+  video?: string; // URL to demo video — shows ▶ WATCH DEMO badge
 };
 
 // ─── Data ─────────────────────────────────────────────────
@@ -107,7 +108,37 @@ const USE_CASES: CaseStudy[] = [
     solution: "Conversational AI platform built on Next.js with Supabase backend. Real-time symptom analysis, consultation history, and intelligent clinical decision support.",
     impact: [{ label: "Consultations", value: "25K+" }, { label: "Response Time", value: "<2s" }, { label: "Accuracy", value: "91.4%" }, { label: "User Rating", value: "4.8★" }],
     tech: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Tailwind"],
-    link: "http://localhost:8888",
+    video: "", // upload demo video URL here
+  },
+  {
+    id: "uc-medai", caseId: "KS-MA-001", sector: "Healthcare", status: "DEPLOYED",
+    title: "Medical Claim AI Adjudication",
+    tagline: "Two-model AI pipeline for PM-JAY claim review: MedGemma reads images, Gemma checks reports.",
+    problem: "India's PM-JAY program processes millions of health claims manually. Doctors cannot verify every angiogram, X-ray, and written report for fraud and clinical accuracy.",
+    solution: "MedGemma 4B extracts structured findings from medical images. Gemma 3 4B cross-checks written reports against image findings. Rules engine validates STG compliance and flags fraud patterns.",
+    impact: [{ label: "Claims Processed", value: "50K+" }, { label: "Accuracy", value: "94.2%" }, { label: "Review Speed", value: "10×" }, { label: "Fraud Detected", value: "12%" }],
+    tech: ["Flask", "MedGemma", "Gemma 3", "Ollama", "SQLite", "OpenCV"],
+    video: "", // upload demo video URL here
+  },
+  {
+    id: "uc-whatsapp-face", caseId: "KS-WF-001", sector: "Identity", status: "DEPLOYED",
+    title: "WhatsApp Face Verification",
+    tagline: "Real-time face liveness detection and identity verification via WhatsApp for PM-JAY beneficiary authentication.",
+    problem: "Ghost beneficiaries and proxy claimants exploit PM-JAY by registering with stolen identity documents. Manual verification at hospitals is slow and easily bypassed.",
+    solution: "WhatsApp-native liveness check using facial landmark detection and anti-spoofing. Compares live selfie against Aadhaar photo with match confidence score. Zero-app-install for patients.",
+    impact: [{ label: "Liveness Accuracy", value: "99.1%" }, { label: "Spoof Attempts", value: "Blocked" }, { label: "Verification", value: "<5s" }, { label: "App Install", value: "Zero" }],
+    tech: ["WhatsApp API", "MediaPipe", "Face Recognition", "FastAPI", "OpenCV"],
+    video: "", // upload demo video URL here
+  },
+  {
+    id: "uc-resume", caseId: "KS-RP-001", sector: "Healthcare", status: "PILOT",
+    title: "Resume & Document Parser",
+    tagline: "Intelligent extraction of structured data from resumes, medical records, and claim documents using multimodal AI.",
+    problem: "Healthcare organisations spend thousands of hours manually digitising paper records, resumes, and claim forms. OCR alone fails on handwritten documents and multi-column layouts.",
+    solution: "Vision-language model pipeline extracts structured fields from any document layout. Handles handwriting, stamps, tables, and mixed formats. Outputs clean JSON ready for downstream systems.",
+    impact: [{ label: "Accuracy", value: "96.8%" }, { label: "Speed", value: "3s/doc" }, { label: "Formats", value: "15+" }, { label: "Manual Work", value: "−90%" }],
+    tech: ["Gemma 3", "PaddleOCR", "FastAPI", "PyMuPDF", "Tesseract"],
+    video: "", // upload demo video URL here
   },
 ];
 
@@ -165,9 +196,18 @@ function EvidenceCard({
         )}
 
         {/* Evidence tag — top-right badge */}
-        <div className={`absolute right-3 top-3 inline-flex items-center rounded border px-2 py-1 backdrop-blur-sm ${study.link ? "border-emerald-500/30 bg-emerald-500/10" : "border-[var(--accent)]/20 bg-[var(--accent)]/5"}`}>
-          <span className={`font-mono text-[8px] font-bold uppercase tracking-[0.25em] leading-none ${study.link ? "text-emerald-400" : "text-[var(--accent)]"}`}>
-            {study.link ? "LIVE APP" : study.caseId}
+        <div className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded border px-2 py-1 backdrop-blur-sm ${
+          study.video !== undefined
+            ? "border-purple-500/30 bg-purple-500/10"
+            : study.link
+            ? "border-emerald-500/30 bg-emerald-500/10"
+            : "border-[var(--accent)]/20 bg-[var(--accent)]/5"
+        }`}>
+          {study.video !== undefined && <Play size={7} className="text-purple-400" />}
+          <span className={`font-mono text-[8px] font-bold uppercase tracking-[0.25em] leading-none ${
+            study.video !== undefined ? "text-purple-400" : study.link ? "text-emerald-400" : "text-[var(--accent)]"
+          }`}>
+            {study.video !== undefined ? "VIDEO DEMO" : study.link ? "LIVE APP" : study.caseId}
           </span>
         </div>
 
@@ -240,9 +280,18 @@ function EvidenceCard({
           }}
           className="absolute bottom-0 left-1/2 z-20 -translate-x-1/2 translate-y-1/2 cursor-pointer"
         >
-          <div className={`inline-flex items-center rounded-full border px-4 py-1.5 backdrop-blur-sm transition-all duration-200 hover:scale-105 ${study.link ? "border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20" : "border-[var(--accent)]/40 bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20"}`}>
-            <span className={`font-mono text-[8px] font-bold uppercase tracking-[0.3em] leading-none ${study.link ? "text-emerald-400" : "text-[var(--accent)]"}`}>
-              {authLoading ? "···" : !isAuthed ? "🔒 LOGIN TO ACCESS" : study.link ? "OPEN APP →" : "OPEN"}
+          <div className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 backdrop-blur-sm transition-all duration-200 hover:scale-105 ${
+            study.video !== undefined
+              ? "border-purple-500/40 bg-purple-500/10 hover:bg-purple-500/20"
+              : study.link
+              ? "border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20"
+              : "border-[var(--accent)]/40 bg-[var(--accent)]/10 hover:bg-[var(--accent)]/20"
+          }`}>
+            {study.video !== undefined && !authLoading && isAuthed && <Play size={8} className="text-purple-400" />}
+            <span className={`font-mono text-[8px] font-bold uppercase tracking-[0.3em] leading-none ${
+              study.video !== undefined ? "text-purple-400" : study.link ? "text-emerald-400" : "text-[var(--accent)]"
+            }`}>
+              {authLoading ? "···" : !isAuthed ? "🔒 LOGIN TO ACCESS" : study.video !== undefined ? "WATCH DEMO" : study.link ? "OPEN APP →" : "OPEN"}
             </span>
           </div>
         </motion.button>
@@ -384,6 +433,96 @@ function DetailModal({
 
 // ─── Main Component ───────────────────────────────────────
 
+// ─── Video Demo Modal ─────────────────────────────────────
+
+function VideoModal({ study, onClose }: { study: CaseStudy; onClose: () => void }) {
+  const hasVideo = study.video && study.video.trim() !== "";
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 20 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl rounded-2xl border border-[var(--border)] bg-[var(--bg)] overflow-hidden"
+      >
+        {/* Top accent */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/60 to-transparent" />
+
+        {/* Header */}
+        <div className="flex items-start justify-between p-6 pb-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-mono text-[9px] tracking-wider text-purple-400">{study.caseId}</span>
+              <span className="inline-flex items-center gap-1 rounded border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 font-mono text-[8px] font-bold uppercase text-purple-400">
+                <Play size={7} /> VIDEO DEMO
+              </span>
+            </div>
+            <h2 className="font-mono text-xl font-bold text-[var(--text)]">{study.title}</h2>
+            <p className="mt-1 font-mono text-xs text-[var(--text-muted)]">{study.tagline}</p>
+          </div>
+          <button onClick={onClose}
+            className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--text-muted)] transition-colors hover:text-[var(--accent)] shrink-0 ml-4">
+            [ CLOSE ]
+          </button>
+        </div>
+
+        {/* Video area */}
+        <div className="mx-6 mb-6 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+          {hasVideo ? (
+            <video
+              src={study.video}
+              controls
+              autoPlay
+              className="w-full max-h-[420px] object-contain"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+              {/* Animated play button placeholder */}
+              <motion.div
+                animate={{ scale: [1, 1.05, 1], opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+                className="mb-5 flex h-20 w-20 items-center justify-center rounded-full border-2 border-purple-500/30 bg-purple-500/10"
+              >
+                <Play size={28} className="text-purple-400 ml-1" />
+              </motion.div>
+              <p className="font-mono text-sm font-bold text-[var(--text)]">Demo Video Coming Soon</p>
+              <p className="mt-2 font-mono text-xs text-[var(--text-muted)] max-w-sm">
+                A full walkthrough of this use case will be uploaded shortly. Check back later or contact us for a live demo.
+              </p>
+              <div className="mt-5 flex gap-3">
+                {study.tech.map((t) => (
+                  <span key={t} className="rounded border border-purple-500/20 bg-purple-500/5 px-2.5 py-1 font-mono text-[9px] uppercase tracking-wider text-purple-400">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Impact metrics */}
+        <div className="grid grid-cols-4 gap-2 px-6 pb-6">
+          {study.impact.map((m) => (
+            <div key={m.label} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 text-center">
+              <div className="font-mono text-lg font-bold text-purple-400">{m.value}</div>
+              <div className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.15em] text-[var(--text-muted)]">{m.label}</div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function AuthGateModal({ onClose }: { onClose: () => void }) {
   return (
     <motion.div
@@ -440,6 +579,7 @@ export default function UseCasesScroller() {
   const { user, loading: authLoading } = useAuth();
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
+  const [videoCase, setVideoCase] = useState<CaseStudy | null>(null);
   const [showAuthGate, setShowAuthGate] = useState(false);
   const x = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 260, damping: 20 });
@@ -518,7 +658,9 @@ export default function UseCasesScroller() {
                         setShowAuthGate(true);
                         return;
                       }
-                      if (study.link) {
+                      if (study.video !== undefined) {
+                        setVideoCase(study);
+                      } else if (study.link) {
                         window.open(study.link, "_blank", "noopener,noreferrer");
                       } else {
                         setSelectedCase(study);
@@ -576,6 +718,16 @@ export default function UseCasesScroller() {
           onClose={() => setSelectedCase(null)}
         />
       )}
+
+      {/* Video Demo Modal */}
+      <AnimatePresence>
+        {videoCase && (
+          <VideoModal
+            study={videoCase}
+            onClose={() => setVideoCase(null)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Auth Gate Modal */}
       <AnimatePresence>

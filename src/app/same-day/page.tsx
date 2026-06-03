@@ -114,6 +114,23 @@ export default function SameDayPage() {
     });
   }, []);
 
+  const loadSample = useCallback(() => {
+    const hospitals = ["HOSP001","HOSP002","HOSP003","HOSP004","HOSP005"];
+    const patients = Array.from({length:40},(_,i)=>`PAT${String(i+1).padStart(3,"0")}`);
+    const rows: Row[] = [];
+    const base = new Date("2024-03-01");
+    patients.forEach((pid, i) => {
+      const h = hospitals[i % hospitals.length];
+      const adm = new Date(base.getTime() + i*86400000);
+      const isSameDay = i % 3 === 0;
+      const dis = new Date(adm.getTime() + (isSameDay ? 4*3600000 : (i%5+1)*86400000));
+      rows.push({ Patient_ID: pid, Hospital_ID: h, Admission_Time: adm.toISOString(), Discharge_Time: dis.toISOString() });
+      if (i < 5) rows.push({ Patient_ID: pid, Hospital_ID: hospitals[(i+1)%5], Admission_Time: new Date(adm.getTime()+2*86400000).toISOString(), Discharge_Time: new Date(adm.getTime()+2*86400000+3*3600000).toISOString() });
+    });
+    setFilename("sample_admissions.csv");
+    setData(parseData(rows));
+  }, []);
+
   if (!data) {
     return (
       <div className="min-h-screen px-6 py-24">
@@ -121,6 +138,17 @@ export default function SameDayPage() {
           <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.4em] text-[var(--accent)]">KS-SD-001 — FRAUD DETECTION</p>
           <h1 className="mb-3 font-mono text-4xl font-bold text-[var(--text)]">Same-Day Admission Fraud</h1>
           <p className="mb-10 font-mono text-sm text-[var(--text-muted)]">Upload admission/discharge data to detect same-day fraud patterns, repeat offenders, and high-risk hospitals.</p>
+          {/* Sample banner */}
+          <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start justify-between gap-4">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
+              <p className="font-mono text-xs text-[var(--text-muted)]">No CSV? Load 45 synthetic admission records with same-day fraud patterns already baked in.</p>
+            </div>
+            <button onClick={loadSample}
+              className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all">
+              Load Sample →
+            </button>
+          </div>
           <UploadZone onFile={handleFile} />
         </div>
       </div>

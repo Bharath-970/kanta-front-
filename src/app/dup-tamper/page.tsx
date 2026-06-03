@@ -18,6 +18,20 @@ type Result = {
   hash2: string;
 };
 
+const SAMPLE_RESULT: Result = {
+  verdict: "TAMPERED",
+  is_exact_duplicate: false,
+  phash_distance: 11,
+  similar: true,
+  ssim_score: 0.71,
+  tampered_regions: ["Top-Right", "Bottom-Left"],
+  tampered_boxes: 4,
+  highlighted_image: null,
+  mask_image: null,
+  hash1: "a3f9c2e1d4b7082f...",
+  hash2: "a3f9c2e1d4b7082f...",
+};
+
 const VERDICT_META: Record<string, { label: string; color: string; bg: string; icon: "ok" | "warn" | "error" }> = {
   EXACT_DUPLICATE:   { label: "Exact Duplicate",      color: "text-red-400",    bg: "border-red-500/30 bg-red-500/10",       icon: "error" },
   TAMPERED:          { label: "Tampering Detected",    color: "text-red-400",    bg: "border-red-500/30 bg-red-500/10",       icon: "error" },
@@ -116,6 +130,18 @@ export default function DupTamperPage() {
           <p className="mt-2 font-mono text-sm text-[var(--text-muted)]">
             Upload two claim document images. Detects exact duplicates (SHA-256), visual similarity (pHash), and tampered regions (SSIM + contour analysis).
           </p>
+        </div>
+
+        {/* Sample banner */}
+        <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start justify-between gap-4">
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-amber-400 mb-1">📦 Sample Data Available</p>
+            <p className="font-mono text-xs text-[var(--text-muted)]">No backend running? Load a pre-analysed tampering result to see what the detection output looks like.</p>
+          </div>
+          <button onClick={() => setResult(SAMPLE_RESULT)}
+            className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400 hover:bg-amber-500/20 transition-all">
+            Load Sample →
+          </button>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">
