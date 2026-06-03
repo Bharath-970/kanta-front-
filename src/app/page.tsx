@@ -40,13 +40,11 @@ import UseCasesScroller from "@/components/UseCasesScroller";
 
 function useBelowFold() {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash) {
-      setVisible(true);
-    }
-  }, []);
+  // Reveal immediately if: has hash, or returning from another page (gate already passed)
+  const initVisible = typeof window !== "undefined"
+    ? (!!window.location.hash || sessionStorage.getItem("ks-gate-passed") === "1")
+    : false;
+  const [visible, setVisible] = useState(initVisible);
 
   useEffect(() => {
     const reveal = () => setVisible(true);
@@ -73,21 +71,16 @@ function useBelowFold() {
 }
 
 export default function Home() {
-  const [entered, setEntered] = useState(false);
-  const [showGate, setShowGate] = useState(true);
-  const [gatePassed, setGatePassed] = useState(false);
+  // Read sessionStorage synchronously so first render is never opacity-0 on return visits
+  const alreadyPassed = typeof window !== "undefined"
+    ? sessionStorage.getItem("ks-gate-passed") === "1"
+    : false;
+
+  const [entered, setEntered] = useState(alreadyPassed);
+  const [showGate, setShowGate] = useState(!alreadyPassed);
+  const [gatePassed, setGatePassed] = useState(alreadyPassed);
   const [activeStack, setActiveStack] = useState("data");
   const belowFold = useBelowFold();
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const passed = sessionStorage.getItem("ks-gate-passed") === "1";
-    if (passed) {
-      setEntered(true);
-      setShowGate(false);
-      setGatePassed(true);
-    }
-  }, []);
 
   const handleEnter = () => {
     sessionStorage.setItem("ks-gate-passed", "1");
