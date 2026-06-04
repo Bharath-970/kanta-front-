@@ -40,9 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-*.py
 batzman.md
 .tmp_serve_*.py
+*.tmp.py
 
 # Sub-app virtualenvs & deps (never commit)
 **/venv/
