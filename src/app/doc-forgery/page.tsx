@@ -139,7 +139,7 @@ export default function DocForgeryPage() {
             <img
               src="/samples/claim-sample.jpg"
               alt="Sample claim document"
-              className="w-full max-h-40 object-cover object-top opacity-80 hover:opacity-100 transition-opacity"
+              className="w-full max-h-48 object-contain bg-[var(--bg)] opacity-80 hover:opacity-100 transition-opacity"
               onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
             />
           </div>

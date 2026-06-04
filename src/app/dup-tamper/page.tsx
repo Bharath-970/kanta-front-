@@ -151,7 +151,7 @@ export default function DupTamperPage() {
             </button>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/samples/claim-sample.jpg" alt="Sample" className="w-full max-h-32 object-cover object-top opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
+          <img src="/samples/claim-sample.jpg" alt="Sample" className="w-full max-h-48 object-contain bg-[var(--bg)] opacity-80 hover:opacity-100 transition-opacity cursor-pointer"
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
         </div>
 
