@@ -9,7 +9,7 @@ import PageTransition from "@/components/PageTransition";
 import Preloader from "@/components/Preloader";
 import ClientCursor from "@/components/ClientCursor";
 
-const CHROMELESS_PATHS = ["/risk-scoring"];
+const CHROMELESS_PATHS: string[] = [];
 
 export default function LayoutShell({
   children,

@@ -31,16 +31,6 @@ type CaseStudy = {
 
 const USE_CASES: CaseStudy[] = [
   {
-    id: "uc-rs", caseId: "KS-RS-001", sector: "Healthcare", status: "DEPLOYED",
-    title: "Insurance Claim Risk Scoring",
-    tagline: "Live XGBoost + SHAP fraud detection dashboard with real-time prediction and explainability.",
-    problem: "Healthcare insurance claims face constant fraud from inflated bills, phantom procedures, and collusion between providers and patients. Manual review cannot scale to millions of claims.",
-    solution: "XGBoost ensemble model with Platt scaling calibrated to 99.7% AUC. Real-time risk scoring via FastAPI with SHAP explainability for every prediction. Hospital ranking by fraud exposure.",
-    impact: [{ label: "AUC Score", value: "99.7%" }, { label: "Latency", value: "<100ms" }, { label: "Claims Scored", value: "10M+" }, { label: "Fraud Caught", value: "$42M" }],
-    tech: ["XGBoost", "FastAPI", "SHAP", "Recharts", "Platt Scaling"],
-    link: "/risk-scoring",
-  },
-  {
     id: "uc-docforgery", caseId: "KS-DF-001", sector: "Healthcare", status: "DEPLOYED",
     title: "Document Forgery Detection",
     tagline: "4-engine forensic pipeline detecting copy-paste, erasure, added content, and document splicing in PM-JAY claim documents.",
